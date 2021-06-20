@@ -19,37 +19,11 @@ Digit second;
 Digit third;
 Digit fourth;
 
-const int a = 2;
-const int b = 3;
-const int c = 4;
-const int d = 5;
-const int e = 6;
-const int f = 7;
-const int g = 8;
-
-const int ZERO[]  = { 1, 1, 1, 1, 1, 1, 0 };
-const int ONE[]   = { 0, 1, 1, 0, 0, 0, 0 };
-const int TWO[]   = { 1, 1, 0, 1, 1, 0, 1 };
-const int THREE[] = { 1, 1, 1, 1, 0, 0, 1 };
-const int FOUR[]  = { 0, 1, 1, 0, 0, 1, 1 };
-const int FIVE[]  = { 1, 0, 1, 1, 0, 1, 1 };
-const int SIX[]   = { 1, 0, 1, 1, 1, 1, 1 };
-const int SEVEN[] = { 1, 1, 1, 0, 0, 0, 0 };
-const int EIGHT[] = { 1, 1, 1, 1, 1, 1, 1 };
-const int NINE[]  = { 1, 1, 1, 0, 0, 1, 1 };
-
-const int D1 = 10;
-const int D2 = 11;
-const int D3 = 12;
-const int D4 = 13;
-
-int** nums;
-int i = D1;
-int limit = D4;
 int lastClockTime[] = {0,0,0,0};
-
-int updateClock = 0;
 String currentMessage = "";
+
+unsigned long lastUpdatedDisplay = millis();
+bool initialOn = false;
 
 void convertDigit(Digit one, Digit two, Digit three, Digit four) {
   if (one._a){
@@ -341,91 +315,6 @@ void convertIntToDigit(int i, Digit& digit) {
   }
 }
 
-void preSetup() {
-  pinMode(a, OUTPUT);
-  pinMode(b, OUTPUT);
-  pinMode(c, OUTPUT);
-  pinMode(d, OUTPUT);
-  pinMode(e, OUTPUT);
-  pinMode(f, OUTPUT);
-  pinMode(g, OUTPUT);
-
-  pinMode(D1, OUTPUT);
-  pinMode(D2, OUTPUT);
-  pinMode(D3, OUTPUT);
-  pinMode(D4, OUTPUT);
-}
-
-void writeNumber(int num[], int s) {
-  for (int i = 0; i < s; i++) {
-    digitalWrite(i + 2, num[i]);
-  }
-}
-
-const int* getNumRepresentation(int number) {
-  if (number == 0) {
-    return ZERO;
-  } else if (number == 1) {
-    return ONE;
-  } else if (number == 2) {
-    return TWO;
-  } else if (number == 3) {
-    return THREE;
-  } else if (number == 4) {
-    return FOUR;
-  } else if (number == 5) {
-    return FIVE;
-  } else if (number == 6) {
-    return SIX;
-  } else if (number == 7) {
-    return SEVEN;
-  } else if (number == 8) {
-    return EIGHT;
-  } else if (number == 9) {
-    return NINE;
-  } else {
-    Serial.println("getNumRepresentation failed: digit doesnt exist: " + String(number));
-    return NULL;
-  }
-}
-
-void displayDigits(int t[]) {
-  digitalWrite(D1, HIGH);
-  digitalWrite(D2, HIGH);
-  digitalWrite(D3, HIGH);
-  digitalWrite(D4, LOW);
-
-  int* num = getNumRepresentation(t[0]);
-  writeNumber(num, 7);
-  delay(2);
-  
-  digitalWrite(D1, HIGH);
-  digitalWrite(D2, HIGH);
-  digitalWrite(D3, LOW);
-  digitalWrite(D4, HIGH);
-
-  num = getNumRepresentation(t[1]);
-  writeNumber(num, 7);
-  delay(2);
-
-  digitalWrite(D1, HIGH);
-  digitalWrite(D2, LOW);
-  digitalWrite(D3, HIGH);
-  digitalWrite(D4, HIGH);
-
-  num = getNumRepresentation(t[2]);
-  writeNumber(num, 7);
-  delay(2);
-
-  digitalWrite(D1, LOW);
-  digitalWrite(D2, HIGH);
-  digitalWrite(D3, HIGH);
-  digitalWrite(D4, HIGH);
-
-  num = getNumRepresentation(t[3]);
-  writeNumber(num, 7);
-  delay(2);
-}
 
 void updateClockTime(String theReadValue) {
   Serial.println("Buffer read: " + theReadValue);
@@ -484,12 +373,10 @@ void updateClockTime(String theReadValue) {
   }
 }
 
-unsigned long lastUpdatedDisplay = millis();
-bool initialOn = false;
 
 void setup() {
   // put your setup code here, to run once:
-  preSetup();
+
   Serial.begin(115200);
 }
 
@@ -502,7 +389,6 @@ void loop() {
     if (c == '\n') {
       Serial.println("The read value " + currentMessage);
       updateClockTime(currentMessage);
-      
       currentMessage = "";
     } else {
       currentMessage += String(c);

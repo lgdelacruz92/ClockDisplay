@@ -29,12 +29,12 @@ public:
   }
 
   void zero() {
-    _a = true;
-    _b = true;
-    _c = true;
-    _d = true;
-    _e = true;
-    _f = true;
+    _a = false;
+    _b = false;
+    _c = false;
+    _d = false;
+    _e = false;
+    _f = false;
     _g = false;
   }
 
